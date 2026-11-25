@@ -1,0 +1,195 @@
+---
+import Base from "../layouts/Base.astro";
+import { site, programs, programNotes } from "../data/site";
+---
+
+<Base title="Programs and prices" description="One-to-one sessions, small group training and online coaching with Imani Brooks, with prices and what each includes.">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Programs and prices</h1>
+      <p class="lede">Three ways to train together. Every option starts with an assessment and a plan written for you.</p>
+      <nav class="jump" aria-label="Program types">
+        {programs.map((p) => <a href={`#${p.id}`}>{p.title}</a>)}
+      </nav>
+    </div>
+  </header>
+
+  {
+    programs.map((p) => (
+      <section class="section group" id={p.id}>
+        <div class="wrap group-grid">
+          <div class="intro">
+            <h2>{p.title}</h2>
+            <p>{p.text}</p>
+          </div>
+          <div class:list={["packs", `count-${p.packages.length}`]}>
+            {p.packages.map((pk) => (
+              <article class:list={["pack", { featured: pk.featured }]}>
+                <div class="pack-head">
+                  <h3>{pk.name}</h3>
+                  {pk.featured && <span class="mono pick">Most clients choose this</span>}
+                </div>
+                <p class="price">
+                  <span>{pk.price}</span>
+                  <span class="per">{pk.per}</span>
+                </p>
+                <p class="summary">{pk.summary}</p>
+                <ul>
+                  {pk.includes.map((inc) => (
+                    <li>
+                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      {inc}
+                    </li>
+                  ))}
+                </ul>
+                <p class="mono notation">{pk.notation}</p>
+                <a class:list={["btn", pk.featured ? "btn-primary" : "btn-quiet"]} href={`/apply?program=${encodeURIComponent(pk.name)}`} aria-label={`Apply for ${pk.name.toLowerCase()}`}>
+                  Apply
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section">
+    <div class="wrap notes">
+      {programNotes.map((n) => <p>{n}</p>)}
+      <a class="btn btn-quiet" href={site.bookingUrl}>Book a free intro call</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 32px;
+  }
+  .jump a {
+    color: var(--ink-2);
+  }
+  .group {
+    padding-block: clamp(48px, 7vw, 80px);
+  }
+  .group-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+    gap: clamp(24px, 5vw, 64px);
+  }
+  .intro p {
+    color: var(--ink-2);
+    margin-top: 16px;
+  }
+  .intro h2 {
+    font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  }
+  .packs {
+    display: grid;
+    gap: 16px;
+  }
+  .count-3 {
+    grid-template-columns: 1fr 1.2fr 1fr;
+  }
+  .count-2 {
+    grid-template-columns: 1fr 1.2fr;
+  }
+  .count-1 {
+    grid-template-columns: minmax(0, 28rem);
+  }
+  .pack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+  }
+  .pack.featured {
+    border-color: var(--accent);
+    box-shadow: inset 0 3px 0 var(--accent);
+  }
+  .pack-head {
+    display: grid;
+    gap: 4px;
+  }
+  .pick {
+    font-size: 0.6875rem;
+    color: var(--accent-ink);
+  }
+  .price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .price span:first-child {
+    font-size: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .per {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+  .summary {
+    color: var(--ink-2);
+    font-size: 0.9688rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 8px;
+    font-size: 0.9375rem;
+  }
+  li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  li svg {
+    margin-top: 5px;
+    color: var(--accent-ink);
+  }
+  .notation {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: auto;
+  }
+  .pack .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .notes {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+    max-width: 44rem;
+    color: var(--ink-2);
+  }
+  .notes .btn {
+    margin-top: 12px;
+  }
+  @media (max-width: 1000px) {
+    .group-grid,
+    .count-3,
+    .count-2 {
+      grid-template-columns: 1fr;
+    }
+    .count-1 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

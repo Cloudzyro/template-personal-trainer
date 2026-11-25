@@ -1,0 +1,387 @@
+---
+import Base from "../layouts/Base.astro";
+import LogCard from "../components/LogCard.astro";
+import { site, home, principles, programs, results, online } from "../data/site";
+const story = results[0];
+const amount = (price: string) => parseInt(price.replace(/\D/g, ""), 10);
+const cheapest = (p: (typeof programs)[number]) => p.packages.reduce((min, pk) => (amount(pk.price) < amount(min.price) ? pk : min));
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="copy">
+        <h1>{home.title}</h1>
+        <p class="lede">{home.text}</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/apply">{home.primary}</a>
+          <a class="btn btn-quiet" href={site.bookingUrl}>{home.secondary}</a>
+        </div>
+        <dl class="facts">
+          {
+            home.facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <LogCard />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="narrow">How the coaching works</h2>
+      <ol class="rows">
+        {
+          principles.map((p, i) => (
+            <li>
+              <span class="mono idx">{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+              <span class="mono notation">{p.notation}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="split-head">
+        <h2>Ways to train with me</h2>
+        <a href="/programs">All programs and prices</a>
+      </div>
+      <ul class="ways">
+        {
+          programs.map((p) => (
+            <li>
+              <a href={`/programs#${p.id}`}>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+                <span class="mono">
+                  from {cheapest(p).price} {cheapest(p).per}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section story">
+    <div class="wrap story-grid">
+      <blockquote>
+        <p>{story.quote}</p>
+        <footer>
+          <span>{story.name}</span>
+          <span class="mono">{story.detail}</span>
+        </footer>
+      </blockquote>
+      <div class="numbers">
+        {
+          story.numbers.map((n) => (
+            <div>
+              <p class="mono label">{n.label}</p>
+              <p class="figure">
+                <span class="before">{n.before}</span>
+                <span class="to" aria-label="to">to</span>
+                <span>{n.after}</span>
+              </p>
+            </div>
+          ))
+        }
+        <p class="sample-note">Sample story. <a href="/results">More results</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap online-grid">
+      <div>
+        <h2>{online.title}</h2>
+        <p class="lede">{online.text}</p>
+        <a class="btn btn-quiet" href="/online">How online coaching works</a>
+      </div>
+      <ol class="steps">
+        {
+          online.steps.map((s, i) => (
+            <li>
+              <span class="mono">{String(i + 1)}</span>
+              <div>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap cta-inner">
+      <h2>Tell me what you want to lift</h2>
+      <div class="actions">
+        <a class="btn btn-light" href="/apply">Apply for coaching</a>
+        <a class="link-light" href={site.bookingUrl}>Or book a free intro call</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(48px, 8vw, 96px);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .copy h1 {
+    max-width: 13ch;
+  }
+  .copy .lede {
+    margin-top: 24px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin: 48px 0 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .facts div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .facts dt {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  .facts dd {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .narrow {
+    max-width: 20ch;
+  }
+  .rows {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .rows li {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1.4fr) 200px;
+    gap: 24px;
+    align-items: baseline;
+    padding-block: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rows p {
+    color: var(--ink-2);
+  }
+  .idx {
+    color: var(--muted);
+  }
+  .notation {
+    color: var(--accent-ink);
+    text-align: right;
+  }
+  .split-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .ways {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 16px;
+  }
+  .ways a {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    height: 100%;
+    padding: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms var(--ease);
+  }
+  .ways a:hover {
+    border-color: var(--line-strong);
+  }
+  .ways p {
+    color: var(--ink-2);
+    font-size: 0.9688rem;
+  }
+  .ways .mono {
+    margin-top: 8px;
+    color: var(--ink);
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: center;
+  }
+  blockquote {
+    margin: 0;
+  }
+  blockquote p {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  blockquote footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: baseline;
+    margin-top: 24px;
+    font-weight: 500;
+  }
+  blockquote footer .mono {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .numbers {
+    display: grid;
+    gap: 24px;
+    padding-left: clamp(0px, 3vw, 40px);
+    border-left: 1px solid var(--line-strong);
+  }
+  .label {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+  }
+  .figure {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 2rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .before {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .to {
+    font-size: 0.875rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .online-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+  }
+  .online-grid .lede {
+    margin-block: 20px 32px;
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+  }
+  .steps .mono {
+    color: var(--accent-ink);
+    padding-top: 4px;
+  }
+  .steps p {
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+  .cta-band {
+    background: var(--ink);
+    color: #f7f7f4;
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+  .cta-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .cta-inner .actions {
+    margin: 0;
+    gap: 24px;
+  }
+  .btn-light {
+    background: #f7f7f4;
+    color: var(--ink);
+  }
+  .btn-light:hover {
+    background: #ffffff;
+  }
+  .link-light {
+    color: #d6d8dd;
+  }
+  .link-light:hover {
+    color: #fff;
+  }
+  @media (max-width: 900px) {
+    .hero-grid,
+    .story-grid,
+    .online-grid {
+      grid-template-columns: 1fr;
+    }
+    .ways {
+      grid-template-columns: 1fr;
+    }
+    .rows li {
+      grid-template-columns: 32px 1fr;
+      gap: 8px 12px;
+    }
+    .rows li p,
+    .rows li .notation {
+      grid-column: 2;
+      text-align: left;
+    }
+    .numbers {
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid var(--line-strong);
+      padding-top: 24px;
+    }
+  }
+</style>

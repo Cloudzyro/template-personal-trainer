@@ -1,0 +1,125 @@
+---
+import Base from "../layouts/Base.astro";
+import Form from "../components/Form.astro";
+import { apply, programs, site } from "../data/site";
+const options = programs.flatMap((p) => p.packages.map((pk) => `${p.title}: ${pk.name}`));
+---
+
+<Base title="Apply for coaching" description="Apply for one-to-one, small group or online strength coaching with Imani Brooks.">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>{apply.title}</h1>
+      <p class="lede">{apply.text}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap grid">
+      <div class="form-card">
+        <Form subject={`Coaching application for ${site.name}`} submitLabel="Send application" thanks={apply.thanks}>
+          <div class="fields">
+            <label class="field">Your name<input name="name" autocomplete="name" required /></label>
+            <label class="field">Email<input name="email" type="email" autocomplete="email" required /></label>
+          </div>
+          <div class="fields">
+            <label class="field"><span>Phone <small>(optional)</small></span><input name="phone" type="tel" autocomplete="tel" /></label>
+            <label class="field">
+              Program you're interested in
+              <select name="program" id="program">
+                <option value="Not sure yet">Not sure yet</option>
+                {options.map((o) => <option>{o}</option>)}
+              </select>
+            </label>
+          </div>
+          <fieldset>
+            <legend>How would you like to train</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="format" value="In person" checked /> In person</label>
+              <label class="choice"><input type="radio" name="format" value="Online" /> Online</label>
+              <label class="choice"><input type="radio" name="format" value="Either" /> Either</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Strength training experience</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="experience" value="New to it" /> New to it</label>
+              <label class="choice"><input type="radio" name="experience" value="Under 2 years" /> Under 2 years</label>
+              <label class="choice"><input type="radio" name="experience" value="2 years or more" /> 2 years or more</label>
+            </div>
+          </fieldset>
+          <label class="field">What do you want from training<textarea name="goals" rows="4" required></textarea></label>
+          <div class="fields">
+            <label class="field">Days and times you can train<input name="availability" placeholder="Weekday mornings" /></label>
+            <label class="field">
+              Monthly budget
+              <select name="budget">
+                <option>Under $150</option>
+                <option>$150 to $300</option>
+                <option>$300 to $600</option>
+                <option>Over $600</option>
+              </select>
+            </label>
+          </div>
+          <label class="field"><span>Injuries or health notes I should know about <small>(optional, keep it brief)</small></span><textarea name="health" rows="3"></textarea></label>
+        </Form>
+      </div>
+      <aside class="aside">
+        <h2>What happens next</h2>
+        <ol>
+          <li>I read your application and reply within two working days.</li>
+          <li>We have a free 20-minute call to talk through goals and schedule.</li>
+          <li>If we're a good fit, we book your assessment and you get your first plan within a week.</li>
+        </ol>
+        <p>Prefer to talk first? <a href={site.bookingUrl}>Book a free intro call</a>.</p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const wanted = new URLSearchParams(location.search).get("program");
+  const select = document.querySelector<HTMLSelectElement>("#program");
+  if (wanted && select) {
+    const match = [...select.options].find((o) => o.text.toLowerCase().includes(wanted.toLowerCase()));
+    if (match) select.value = match.value;
+  }
+</script>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    padding: clamp(20px, 4vw, 32px);
+  }
+  .aside {
+    display: grid;
+    gap: 16px;
+    color: var(--ink-2);
+    position: sticky;
+    top: 24px;
+  }
+  .aside h2 {
+    font-size: 1.5rem;
+    color: var(--ink);
+  }
+  .aside ol {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .aside {
+      position: static;
+    }
+  }
+</style>

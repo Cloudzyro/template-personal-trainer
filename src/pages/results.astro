@@ -1,0 +1,142 @@
+---
+import Base from "../layouts/Base.astro";
+import { results } from "../data/site";
+---
+
+<Base title="Client results" description="Sample client stories from Imani Brooks Coaching: what they wanted, how they trained and what changed.">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>What changed for clients</h1>
+      <p class="lede">Numbers people care about, in their own words. Everyone starts somewhere different, so these are stories, not promises.</p>
+      <p class="sample-note banner">These are sample stories that show how this page works. Replace them with your own clients' stories, with their permission.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap list">
+      {
+        results.map((r) => (
+          <article class="story">
+            <div class="who">
+              <h2>{r.name}</h2>
+              <p class="mono">{r.detail}</p>
+            </div>
+            <blockquote>
+              <p>{r.quote}</p>
+            </blockquote>
+            <table>
+              <caption class="visually-hidden">Before and after for {r.name}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Measure</th>
+                  <th scope="col">Before</th>
+                  <th scope="col">After</th>
+                </tr>
+              </thead>
+              <tbody>
+                {r.numbers.map((n) => (
+                  <tr>
+                    <th scope="row">{n.label}</th>
+                    <td class="before">{n.before || "not tracked"}</td>
+                    <td class="after">{n.after}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .banner {
+    margin-top: 24px;
+    padding: 12px 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-control);
+    max-width: 44rem;
+  }
+  .list {
+    display: grid;
+    gap: 0;
+  }
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1.3fr);
+    gap: clamp(20px, 4vw, 48px);
+    padding-block: 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .story:first-child {
+    padding-top: 0;
+  }
+  .who h2 {
+    font-size: 1.5rem;
+  }
+  .who .mono {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 8px;
+  }
+  blockquote {
+    margin: 0;
+    font-size: 1.1875rem;
+    line-height: 1.5;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    align-self: start;
+    table-layout: fixed;
+  }
+  thead th:first-child {
+    width: 52%;
+  }
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-align: left;
+    padding: 0 8px 8px 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  tbody th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  tbody th,
+  td {
+    padding: 12px 8px 12px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  td {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .before {
+    color: var(--muted);
+  }
+  .after {
+    font-weight: 500;
+    color: var(--accent-ink);
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  @media (max-width: 900px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

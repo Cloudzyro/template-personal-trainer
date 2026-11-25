@@ -1,0 +1,143 @@
+---
+import { sampleWeek } from "../data/site";
+const split = (lift: string) => {
+  const m = lift.match(/^(.*?)\s(\d.*)$/);
+  return m ? { name: m[1], sets: m[2] } : { name: lift, sets: "" };
+};
+---
+
+<figure class="log" aria-label="A sample training week from a client program">
+  <div class="top">
+    <span class="title">{sampleWeek.label}</span>
+    <span class="mono who">{sampleWeek.client}</span>
+  </div>
+  <ol class="days">
+    {
+      sampleWeek.days.map((d, i) => (
+        <li class:list={["day", { done: i < 2 }]}>
+          <div class="dayhead">
+            <span class="mono">{d.day}</span>
+            <span>{d.focus}</span>
+            <span class="mono state">{i < 2 ? "logged" : "today"}</span>
+          </div>
+          <ul>
+            {d.lifts.map((l) => {
+              const { name, sets } = split(l);
+              return (
+                <li>
+                  <span>{name}</span>
+                  <span class="mono sets">{sets}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption class="mono note">
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 11l3-3 2 2 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    {sampleWeek.note}
+  </figcaption>
+</figure>
+
+<style>
+  .log {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .title {
+    font-weight: 500;
+    font-size: 1.125rem;
+  }
+  .who {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .days {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .day {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .day:not(.done) {
+    border-color: var(--accent);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .dayhead {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: baseline;
+    gap: 8px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .dayhead .mono {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .day:not(.done) .state {
+    color: var(--accent-ink);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 56px;
+    display: grid;
+    gap: 4px;
+    font-size: 0.9375rem;
+  }
+  ul li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--ink-2);
+  }
+  .sets {
+    font-size: 0.75rem;
+    color: var(--ink);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--accent-ink);
+  }
+  @media (max-width: 480px) {
+    .log {
+      padding: 16px;
+    }
+    ul {
+      padding-left: 0;
+    }
+    ul li {
+      flex-direction: column;
+      gap: 0;
+    }
+    .day:nth-child(2) {
+      display: none;
+    }
+  }
+</style>
